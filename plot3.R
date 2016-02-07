@@ -1,0 +1,18 @@
+plot3<-function(){
+	 alldata <- read.csv("household_power_consumption.txt", sep=";", na.strings="?")
+	 alldata <- subset(alldata, !is.na(Date))
+	 alldata[,1] <- as.Date(alldata[,1], "%d/%m/%Y")
+	 alldata <- subset(alldata, Date==as.Date("2007-02-01") | Date==as.Date("2007-02-02"))
+	 newcol <- paste (as.character(alldata[,1]), alldata[,2])
+	 alldata <- cbind(alldata, newcol)
+	 alldata[,10] <- as.POSIXct(alldata[,10], format="%Y-%m-%d %H:%M:%S")
+	 png("plot3.png",width=480, height=480, units="px")
+	 yrange <- range(alldata[,7], alldata[,8], alldata[,9])
+	 xrange <- range(alldata[,10])
+	 plot(xrange, yrange, type="n", ylab="Energy sub metering", xlab="")
+	 lines(alldata[,10], alldata[,7], col="black")
+	 lines(alldata[,10], alldata[,8], col="red")
+	 lines(alldata[,10], alldata[,9], col="blue")
+	 legend("topright", lty=1, col=c("black", "red", "blue"), legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+	 dev.off()
+}
